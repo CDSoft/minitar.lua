@@ -162,17 +162,18 @@ local function extract()
             if args.verbose then dump_file(file) end
             if file.type == "directory" then
                 safe(fs.mkdirs, file.name)
+                touches[#touches+1] = {fs.touch, file.name, file.mtime}
+                touches[#touches+1] = {fs.chmod, file.name, file.mode}
             elseif file.type == "file" then
                 fs.remove(file.name)
                 safe(fs.mkdirs, file.name:dirname())
                 safe(fs.write_bin, file.name, file.content)
+                safe(fs.touch, file.name, file.mtime)
+                safe(fs.chmod, file.name, file.mode)
             end
-            touches[#touches+1] = {file.name, file.mtime}
-            safe(fs.touch, file.name, file.mtime)
-            safe(fs.chmod, file.name, file.mode)
         end
         for i = 1, #touches do
-            safe(fs.touch, table.unpack(touches[i]))
+            safe(table.unpack(touches[i]))
         end
     end)
 end
