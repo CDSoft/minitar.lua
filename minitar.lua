@@ -21,6 +21,7 @@ https://github.com/cdsoft/minitar.lua
 
 local F = require "F"
 local fs = require "fs"
+local sh = require "sh"
 local term = require "term"
 local tar = require "tar"
 local lzip = require "lzip"
@@ -95,6 +96,54 @@ local function dump(archive)
     for _, file in ipairs(files) do
         dump_file(file)
     end
+end
+
+local function gzip(s)
+    local input_name = (args.archive or "stdin"):basename():splitext()
+    local output_name = input_name..".gz"
+    return fs.with_tmpdir(function(tmp)
+        local input = tmp/input_name
+        local output = tmp/output_name
+        assert(fs.write_bin(input, s))
+        assert(sh.run("gzip --to-stdout", input, ">", output))
+        return assert(fs.read_bin(output))
+    end)
+end
+
+local function gunzip(s)
+    local input_name = (args.archive or "stdin"):basename()
+    local output_name = input_name:splitext()
+    return fs.with_tmpdir(function(tmp)
+        local input = tmp/input_name
+        local output = tmp/output_name
+        assert(fs.write_bin(input, s))
+        assert(sh.run("gunzip --to-stdout", input, ">", output))
+        return assert(fs.read_bin(output))
+    end)
+end
+
+local function xz(s)
+    local input_name = (args.archive or "stdin"):basename():splitext()
+    local output_name = input_name..".xz"
+    return fs.with_tmpdir(function(tmp)
+        local input = tmp/input_name
+        local output = tmp/output_name
+        assert(fs.write_bin(input, s))
+        assert(sh.run("xz --to-stdout", input, ">", output))
+        return assert(fs.read_bin(output))
+    end)
+end
+
+local function unxz(s)
+    local input_name = (args.archive or "stdin"):basename()
+    local output_name = input_name:splitext()
+    return fs.with_tmpdir(function(tmp)
+        local input = tmp/input_name
+        local output = tmp/output_name
+        assert(fs.write_bin(input, s))
+        assert(sh.run("unxz --to-stdout", input, ">", output))
+        return assert(fs.read_bin(output))
+    end)
 end
 
 local function get_compressor()

@@ -44,7 +44,7 @@ local input = build "$builddir/step_0-generate_input" { "sh", "gen_test.sh", arg
 section "Archive creation"
 
 rule "create" {
-    command = "$minitar -cvf $out $args",
+    command = "$minitar -cf $out $args",
     implicit_in = {
         "$minitar",
         input,
@@ -64,7 +64,7 @@ rule "extract" {
 }
 
 ----------------------------------------------------------------------------------------------------
--- Strip path in the archive
+-- Strip path in the archive, lzip compression
 ----------------------------------------------------------------------------------------------------
 
 build "$builddir/step_1-creation.tar"     { "create",   args="$input --strip 1" }
@@ -88,7 +88,7 @@ build "$builddir/step_4-creation.tartest" { "tartest", "$builddir/step_4-creatio
 build "$builddir/step_4-creation.extract" { "extract", "$builddir/step_4-creation.tar.lz" }
 
 ----------------------------------------------------------------------------------------------------
--- Strip path and add a component in the archive
+-- Strip path and add a component in the archive, lzip compression
 ----------------------------------------------------------------------------------------------------
 
 build "$builddir/step_5-creation.tar.lz"  { "create",   args="$input --strip 1 --add /foo/bar/" }
@@ -106,3 +106,20 @@ build "$builddir/step_7-creation.test"    { "test",    "$builddir/step_7-creatio
 build "$builddir/step_7-creation.tartest" { "tartest", "$builddir/step_7-creation.tar.lz" }
 build "$builddir/step_7-creation.extract" { "extract", "$builddir/step_7-creation.tar.lz" }
 
+----------------------------------------------------------------------------------------------------
+-- Gzip compression
+----------------------------------------------------------------------------------------------------
+
+build "$builddir/step_8-creation.tar.gz"  { "create",   args="$input --strip 1" }
+build "$builddir/step_8-creation.test"    { "test",    "$builddir/step_8-creation.tar.gz" }
+build "$builddir/step_8-creation.tartest" { "tartest", "$builddir/step_8-creation.tar.gz" }
+build "$builddir/step_8-creation.extract" { "extract", "$builddir/step_8-creation.tar.gz" }
+
+----------------------------------------------------------------------------------------------------
+-- xz compression
+----------------------------------------------------------------------------------------------------
+
+build "$builddir/step_9-creation.tar.xz"  { "create",   args="$input --strip 1" }
+build "$builddir/step_9-creation.test"    { "test",    "$builddir/step_9-creation.tar.xz" }
+build "$builddir/step_9-creation.tartest" { "tartest", "$builddir/step_9-creation.tar.xz" }
+build "$builddir/step_9-creation.extract" { "extract", "$builddir/step_9-creation.tar.xz" }

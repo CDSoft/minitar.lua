@@ -30,7 +30,7 @@ build $builddir/step_0-generate_input: sh gen_test.sh
 ######################################################################
 
 rule create
-  command = $minitar -cvf $out $args
+  command = $minitar -cf $out $args
 
 rule test
   command = $minitar -tf $in $args > $out
@@ -76,6 +76,16 @@ build $builddir/step_7-creation.tar.lz: create | $minitar $builddir/step_0-gener
 build $builddir/step_7-creation.test: test $builddir/step_7-creation.tar.lz
 build $builddir/step_7-creation.tartest: tartest $builddir/step_7-creation.tar.lz
 build $builddir/step_7-creation.extract: extract $builddir/step_7-creation.tar.lz
+build $builddir/step_8-creation.tar.gz: create | $minitar $builddir/step_0-generate_input
+  args = $input --strip 1
+build $builddir/step_8-creation.test: test $builddir/step_8-creation.tar.gz
+build $builddir/step_8-creation.tartest: tartest $builddir/step_8-creation.tar.gz
+build $builddir/step_8-creation.extract: extract $builddir/step_8-creation.tar.gz
+build $builddir/step_9-creation.tar.xz: create | $minitar $builddir/step_0-generate_input
+  args = $input --strip 1
+build $builddir/step_9-creation.test: test $builddir/step_9-creation.tar.xz
+build $builddir/step_9-creation.tartest: tartest $builddir/step_9-creation.tar.xz
+build $builddir/step_9-creation.extract: extract $builddir/step_9-creation.tar.xz
 
 ######################################################################
 # Regenerate build.ninja when build.lua changes
