@@ -123,3 +123,22 @@ build "$builddir/step_9-creation.tar.xz"  { "create",   args="$input --strip 1" 
 build "$builddir/step_9-creation.test"    { "test",    "$builddir/step_9-creation.tar.xz" }
 build "$builddir/step_9-creation.tartest" { "tartest", "$builddir/step_9-creation.tar.xz" }
 build "$builddir/step_9-creation.extract" { "extract", "$builddir/step_9-creation.tar.xz" }
+
+----------------------------------------------------------------------------------------------------
+-- Smallest tar archives (empty)
+----------------------------------------------------------------------------------------------------
+
+build "$builddir/step_10-creation.tar"     { "create",   args="$input/empty --strip 1" }
+build "$builddir/step_10-creation.test"    { "test",    "$builddir/step_10-creation.tar" }
+build "$builddir/step_10-creation.tartest" { "tartest", "$builddir/step_10-creation.tar" }
+build "$builddir/step_10-creation.extract" { "extract", "$builddir/step_10-creation.tar" }
+
+build "$builddir/step_11-creation.tar"     { "create",   args="$input/empty --strip 2" }
+build "$builddir/step_11-creation.test"    { "test",    "$builddir/step_11-creation.tar" }
+build "$builddir/step_11-creation.tartest" { "tartest", "$builddir/step_11-creation.tar" }
+build "$builddir/step_11-creation.extract" { "extract", "$builddir/step_11-creation.tar" }
+
+build "$builddir/step_12-creation.tar"     { "create",   args="$input/empty --strip 3" }
+build "$builddir/step_12-creation.test"    { "test",    "$builddir/step_12-creation.tar" }
+build "$builddir/step_12-creation.tartest" { "tartest", "$builddir/step_12-creation.tar" }
+build "$builddir/step_12-creation.extract" { "extract", "$builddir/step_12-creation.tar" }

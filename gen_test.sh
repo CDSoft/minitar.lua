@@ -30,3 +30,4 @@ f src/main.c "# nothing important"
 d lib
 d lib/data
 f lib/data/big.txt "$(yes 'a large file' | head -n 1000000)"
+d empty
