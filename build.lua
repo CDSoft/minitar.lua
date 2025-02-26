@@ -19,6 +19,7 @@ https://github.com/cdsoft/minitar.lua
 --]]
 
 var "builddir" ".build"
+clean "$builddir"
 
 var "minitar" "$builddir/minitar"
 
@@ -26,7 +27,9 @@ var "minitar" "$builddir/minitar"
 -- Compilation
 ----------------------------------------------------------------------------------------------------
 
-build.luax.native "$minitar" "minitar.lua"
+install "bin" {
+    build.luax.native "$minitar" "minitar.lua"
+}
 
 ----------------------------------------------------------------------------------------------------
 -- Tests

@@ -65,7 +65,7 @@ end
 
 local function mode(m, t)
     return F.str {
-        t=="directory" and "d" or "-",
+        t=="directory" and "d" or t=="link" and "l" or "-",
         m&fs.uR~=0 and "r" or "-", m&fs.uW~=0 and "w" or "-", m&fs.uX~=0 and "x" or "-",
         m&fs.gR~=0 and "r" or "-", m&fs.gW~=0 and "w" or "-", m&fs.gX~=0 and "x" or "-",
         m&fs.oR~=0 and "r" or "-", m&fs.oW~=0 and "w" or "-", m&fs.oX~=0 and "x" or "-",
@@ -78,12 +78,14 @@ end
 
 local function safe(f, ...)
     local res, err = f(...)
-    if not res then F.error_without_stack_trace(err) end
+    if not res then F.error(err) end
     return res
 end
 
 local function dump_file(file)
-    print(string.format("%s %10d %s %s", mode(file.mode, file.type), file.size, mtime(file.mtime), file.name))
+    local link = ""
+    if file.link then link = string.format("-> %s", file.link) end
+    print(string.format("%s %10d %s %s%s", mode(file.mode, file.type), file.size, mtime(file.mtime), file.name, link))
 end
 
 local function dump(archive)
@@ -218,6 +220,12 @@ local function extract()
                 safe(fs.mkdirs, file.name:dirname())
                 safe(fs.write_bin, file.name, file.content)
                 safe(fs.touch, file.name, file.mtime)
+                safe(fs.chmod, file.name, file.mode)
+            elseif file.type == "link" then
+                fs.remove(file.name)
+                safe(fs.mkdirs, file.name:dirname())
+                safe(fs.symlink, file.link, file.name)
+                safe(fs.ltouch, file.name, file.mtime)
                 safe(fs.chmod, file.name, file.mode)
             end
         end
