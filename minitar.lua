@@ -103,14 +103,14 @@ local function dump(archive)
     end
 end
 
-local function gzip(s)
+local function gzip(s, level)
     local input_name = (args.archive or "stdin"):basename():splitext()
     local output_name = input_name..".gz"
     return fs.with_tmpdir(function(tmp)
         local input = tmp/input_name
         local output = tmp/output_name
         assert(fs.write_bin(input, s))
-        assert(sh.run("gzip --to-stdout", input, ">", output))
+        assert(sh.run("gzip --to-stdout", "-"..level, input, ">", output))
         return assert(fs.read_bin(output))
     end)
 end
@@ -127,14 +127,14 @@ local function gunzip(s)
     end)
 end
 
-local function xz(s)
+local function xz(s, level)
     local input_name = (args.archive or "stdin"):basename():splitext()
     local output_name = input_name..".xz"
     return fs.with_tmpdir(function(tmp)
         local input = tmp/input_name
         local output = tmp/output_name
         assert(fs.write_bin(input, s))
-        assert(sh.run("xz --to-stdout", input, ">", output))
+        assert(sh.run("xz --to-stdout", "-"..level, input, ">", output))
         return assert(fs.read_bin(output))
     end)
 end
