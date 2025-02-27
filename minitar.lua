@@ -154,15 +154,18 @@ end
 local function get_compressor()
     local z, uz = F.id, F.id
     local level
-    if args.gzip then z, uz, level = gzip,      gunzip,      tonumber(args.gzip[1]) end
-    if args.lzip then z, uz, level = lzip.lzip, lzip.unlzip, tonumber(args.lzip[1]) end
-    if args.xz   then z, uz, level = xz,        unxz,        tonumber(args.xz[1])   end
+    if args.gzip then z, uz, level = gzip,      gunzip,      tonumber(args.gzip[1]); goto done end
+    if args.lzip then z, uz, level = lzip.lzip, lzip.unlzip, tonumber(args.lzip[1]); goto done end
+    if args.xz   then z, uz, level = xz,        unxz,        tonumber(args.xz[1])  ; goto done end
     if args.archive then
         local ext = args.archive:ext()
-        if ext == ".gz" then z, uz = gzip,      gunzip      end
-        if ext == ".lz" then z, uz = lzip.lzip, lzip.unlzip end
-        if ext == ".xz" then z, uz = xz,        unxz        end
+        if ext:match "%.t?gz" then z, uz = gzip,      gunzip      ; goto done end
+        if ext:match "%.t?lz" then z, uz = lzip.lzip, lzip.unlzip ; goto done end
+        if ext:match "%.t?xz" then z, uz = xz,        unxz        ; goto done end
+        if ext:match "%.tar"  then z, uz = F.id,      F.id        ; goto done end
+        error(args.archive..": unsupported format")
     end
+::done::
     return z, uz, level or 6
 end
 
