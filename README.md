@@ -1,5 +1,7 @@
 # minitar.lua
 
+<p align="center"><img alt="Minitar logo" src="minitar.svg"/></p>
+
 `minitar.lua` is a minimal tar implementation in Lua, based on [LuaX](https://github.com/CDSoft/luax).
 
 ## Description
