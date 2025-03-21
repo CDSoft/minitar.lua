@@ -55,9 +55,12 @@ local actions = F{args.create and "-c", args.extract and "-x", args.test and "-t
 if #actions == 0 then F.error_without_stack_trace("-c, -x or -t missing") end
 if #actions > 1 then F.error_without_stack_trace(actions:str(", ", " and ").." are exclusive") end
 
-local formats = F{args.gzip and "--gzip", args.lzip and "--lzip", args.xz and "-xz-"}:filter(F.id)
+local formats = F{args.gzip and "--gzip", args.lzip and "--lzip", args.xz and "--xz"}:filter(F.id)
 if #formats > 1 then F.error_without_stack_trace(formats:str(", ", " and ").." are exclusive") end
 
+if args.gzip and not args.gzip:match "^%d$" then F.error_without_stack_trace(string.format("The gzip compression level (%s) must be a number between 0 and 9", args.gzip)) end
+if args.lzip and not args.lzip:match "^%d$" then F.error_without_stack_trace(string.format("The lzip compression level (%s) must be a number between 0 and 9", args.lzip)) end
+if args.xz and not args.xz:match "^%d$" then F.error_without_stack_trace(string.format("The xz compression level (%s) must be a number between 0 and 9", args.xz)) end
 if args.verbose and args.create and (not args.archive or args.archive=="-") then
     F.error_without_stack_trace("can not write verbose messages to stdout")
 end
