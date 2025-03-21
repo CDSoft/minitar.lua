@@ -61,6 +61,7 @@ if #formats > 1 then F.error_without_stack_trace(formats:str(", ", " and ").." a
 if args.gzip and not args.gzip:match "^%d$" then F.error_without_stack_trace(string.format("The gzip compression level (%s) must be a number between 0 and 9", args.gzip)) end
 if args.lzip and not args.lzip:match "^%d$" then F.error_without_stack_trace(string.format("The lzip compression level (%s) must be a number between 0 and 9", args.lzip)) end
 if args.xz and not args.xz:match "^%d$" then F.error_without_stack_trace(string.format("The xz compression level (%s) must be a number between 0 and 9", args.xz)) end
+
 if args.verbose and args.create and (not args.archive or args.archive=="-") then
     F.error_without_stack_trace("can not write verbose messages to stdout")
 end
@@ -88,6 +89,19 @@ local function safe(f, ...)
     return res
 end
 
+local function fnmatch(file)
+    if #args.file == 0 then return true end -- no pattern => accept all files
+    local prevname = nil
+    local name = file.name
+    while name ~= prevname do
+        for i = 1, #args.file do
+            if fs.fnmatch(args.file[i], name) then return true end
+        end
+        prevname, name = name, name:dirname()
+    end
+    return false
+end
+
 local function dump_file(file)
     local link = ""
     if file.link then link = string.format("-> %s", file.link) end
@@ -102,7 +116,9 @@ local function dump(archive)
         files = archive
     end
     for _, file in ipairs(files) do
-        dump_file(file)
+        if fnmatch(file) then
+            dump_file(file)
+        end
     end
 end
 
@@ -219,6 +235,7 @@ local function extract()
     with_dir(args.newpath, function()
         local touches = {}
         for _, file in ipairs(files) do
+            if not fnmatch(file) then goto continue end
             if args.verbose then dump_file(file) end
             if file.type == "directory" then
                 safe(fs.mkdirs, file.name)
@@ -237,6 +254,7 @@ local function extract()
                 safe(fs.ltouch, file.name, file.mtime)
                 safe(fs.chmod, file.name, file.mode)
             end
+            ::continue::
         end
         for i = 1, #touches do
             safe(table.unpack(touches[i]))

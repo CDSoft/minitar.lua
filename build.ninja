@@ -9,9 +9,9 @@
 # Files installed in bin
 #   .build/minitar
 
+builddir = .build
 ninja_required_version = 1.11.1
 
-builddir = .build
 minitar = $builddir/minitar
 
 rule luax-native
@@ -155,7 +155,7 @@ rule bang
   command = bang $in -o $out
   generator = true
 
-build build.ninja: bang build.lua
+build build.ninja: bang build.lua | .git/refs/tags
 
 ######################################################################
 # Default targets
