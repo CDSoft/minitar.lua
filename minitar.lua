@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with minitar.lua.  If not, see <https://www.gnu.org/licenses/>.
 
 For further information about minitar.lua you can visit
-https://github.com/cdsoft/minitar.lua
+https://codeberg.org/cdsoft/minitar.lua
 --]]
 
 local F = require "F"

@@ -1,6 +1,6 @@
 # minitar.lua
 
-`minitar.lua` is a minimal tar implementation in Lua, based on [LuaX](https://github.com/CDSoft/luax).
+`minitar.lua` is a minimal tar implementation in Lua, based on [LuaX](https://codeberg.org/cdsoft/luax).
 
 ## Description
 
@@ -11,7 +11,7 @@ It supports multiple compression formats (gzip, lzip, xz) and offers path manipu
 
 ### Prerequisites
 
-- [LuaX](https://github.com/CDSoft/luax) and [Bang](https://github.com/CDSoft/bang) must be installed on your system
+- [LuaX](https://codeberg.org/cdsoft/luax) and [Bang](https://codeberg.org/cdsoft/bang) must be installed on your system
 - To use compression features, the corresponding tools must be available:
   - `gzip` for gzip compression
   - `xz` for xz compression
@@ -24,7 +24,7 @@ No external dependency is required for the lzip compression.
 Download the sources, compile and install `minitar`:
 
 ```bash
-$ git clone https://github.com/CDSoft/minitar.lua
+$ git clone https://codeberg.org/cdsoft/minitar.lua
 $ cd minitar.lua
 $ bang && ninja install
 ```
@@ -181,4 +181,4 @@ The compression format is automatically detected during extraction based on the 
     along with minitar.lua.  If not, see <https://www.gnu.org/licenses/>.
 
     For further information about minitar.lua you can visit
-    https://github.com/cdsoft/minitar.lua
+    https://codeberg.org/cdsoft/minitar.lua
